@@ -10,3 +10,10 @@ To run any of this you need to do the following things:
 *	run `ant test`
 
 This will run all the unit tests for the geohash library that depend on the census file(s).
+
+Continuous Integration
+======================
+
+This project has a continuous integration server located here:
+
+http://geometa.hsr.ch/hudson/view/geohash-java/
