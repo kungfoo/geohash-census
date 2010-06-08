@@ -1,0 +1,12 @@
+Running this code
+=================
+
+This project has the geohash-java project as a submodule and needs input data.
+
+To run any of this you need to do the following things:
+
+*	Acquire the places2k.txt file from here (it's pretty large so I don't version it): http://www.census.gov/geo/www/gazetteer/places2k.html
+*	run `git submodule init && git submodule update`
+*	run `ant test`
+
+This will run all the unit tests for the geohash library that depend on the census file(s).
