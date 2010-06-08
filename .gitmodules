@@ -1,0 +1,3 @@
+[submodule "vendor/geohash-java"]
+	path = vendor/geohash-java
+	url = http://github.com/kungfoo/geohash-java.git
