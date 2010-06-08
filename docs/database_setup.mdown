@@ -1,0 +1,51 @@
+
+Where to get the data from
+==========================
+
+http://www.census.gov/geo/www/gazetteer/places2k.html
+
+Import to flat table
+====================
+
+    CREATE TABLE places_staging(data text);
+
+then
+
+    set client_encoding = 'latin1';
+		\copy places_staging FROM {path-to-file}/places2k.txt DELIMITER AS '|'
+
+
+Generation of places table
+==========================
+    
+		CREATE TABLE places
+		(
+		  id serial NOT NULL,
+		  "name" character varying(64),
+		  latitude double precision,
+		  longitude double precision,
+		  CONSTRAINT places_fk_id PRIMARY KEY (id)
+		)
+		WITH (OIDS=FALSE);
+
+
+Inserting the data from the flat table
+======================================
+
+    insert into places(name, latitude, longitude)
+		select trim(substring(data, 10,64)) as name, 
+		       cast (substring(data, 144, 10) as float8) as latitude,
+		       cast (substring(data, 154, 11) as float8) as longitude
+		       from places_staging;
+
+Adding geometry column generated from lat/lon
+=============================================
+    
+    select addgeometrycolumn ('public', 'places', 'location', 4326, 'POINT', 2);
+    update places set location = st_transform(st_geomfromtext('POINT(' || longitude || ' ' || latitude || ')', 4269), 4326);
+
+Getting the data out again
+==========================
+
+    select name, st_y(location) as latitude, st_x(location) as longitude from places;
+
